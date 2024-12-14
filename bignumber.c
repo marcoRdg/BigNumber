@@ -34,10 +34,42 @@ BigNumber bigNumber(Node first, char sign){
   return novoBig;
 }
 
+void adicionaNumero(BigNumber lista, Node n){
+  n->prev = lista->tail;
+  lista->tail->next = n;
+  lista->tail = n;
+}
+
+int printCadeiaNo(Node no){
+  if (no->next!=NULL){
+    printf("%d", no->data);
+    printCadeiaNo(no->next);
+  }else{
+    printf("%d", no->data);
+    return 0;
+  }
+  return 0;
+}
+
+void printBigNum(BigNumber lista){
+  printf("%c", lista->sign);
+  printCadeiaNo(lista->head);
+  printf("\n");
+}
+
+
 int main(){
-  Node novoNo = node(5);
-  BigNumber novoBigNumber = bigNumber(novoNo,'+');
-  printf("%d\n",  novoBigNumber->head->data);
+ 
+  BigNumber num = bigNumber(node(5),'+');
+  adicionaNumero(num, node(5));
+  adicionaNumero(num, node(5));
+  adicionaNumero(num, node(7));
+  BigNumber num2 = bigNumber(node(5),'-');
+  adicionaNumero(num2, node(5));
+  adicionaNumero(num2, node(5));
+  adicionaNumero(num2, node(7));
+  printBigNum(num);
+  printBigNum(num2);
   return 0;
 }
 
