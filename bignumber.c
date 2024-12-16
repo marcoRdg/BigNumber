@@ -222,6 +222,7 @@ BigNumber lerNumero(){
   caracter1 = getchar();
   
   if(caracter1=='\n'){
+    liberaMemoria(num1);
     return NULL;
   }
   
@@ -252,7 +253,7 @@ void lerEquacao(){
     //printBigNum(num1);
     //printBigNum(num2);
 
-    BigNumber result = bigNumber();
+    BigNumber result;
     
     
     
