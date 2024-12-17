@@ -192,6 +192,12 @@ BigNumber somar(BigNumber num1, BigNumber num2, char sign){
   return 0;
 }
 
+BigNumber multiplicar(BigNumber num1, BigNumber num2){
+  return NULL;
+  
+  
+}
+
 void removerZeros(BigNumber num1){
   Node no = num1->head;
   while(no != NULL && no->data == 0 && no->next != NULL){
@@ -221,7 +227,7 @@ BigNumber lerNumero(){
   char caracter1;
   caracter1 = getchar();
   
-  if(caracter1=='\n'){
+  if(caracter1==-1){
     liberaMemoria(num1);
     return NULL;
   }
