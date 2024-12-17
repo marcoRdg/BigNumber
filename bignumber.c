@@ -100,12 +100,39 @@ int maiorBigNum(BigNumber num1, BigNumber num2){
       }
       a=a->next;
       b=b->next;
-    }while(a->prev!=NULL || b->prev!=NULL);
+    //}while(a->prev!=NULL || b->prev!=NULL);
+    }while(a!=NULL || b!=NULL);
     return 0;
   }
 }
 
+void removerZeros(BigNumber num1){
+  Node no = num1->head;
+  while(no != NULL && no->data == 0 && no->next != NULL){
+    Node aux = no;
+    no = no->next;
+    no->prev = NULL;
+    free(aux);
+    num1->qtd-=1;
+    num1->head=no;
+  }
+
+}
+
+void liberaMemoria(BigNumber lista){
+  Node atual = lista->head;
+  while(atual!=NULL){
+    Node aux = atual;
+    atual = atual->next;
+    free(aux);
+  }
+  free(lista);
+}
+
 BigNumber somar(BigNumber num1, BigNumber num2, char sign){
+
+  char sinal1=num1->sign;
+  char sinal2=num2->sign;
 
   Node numero1 = num1->tail;
   Node numero2 = num2->tail;
@@ -133,6 +160,8 @@ BigNumber somar(BigNumber num1, BigNumber num2, char sign){
       if(numero1!=NULL) numero1=numero1->prev;
       if(numero2!=NULL) numero2=numero2->prev;
     }
+    num1->sign=sinal1;
+    num2->sign=sinal2;
     return result;
   
   }else{
@@ -152,12 +181,13 @@ BigNumber somar(BigNumber num1, BigNumber num2, char sign){
         }
         
         
-        
         adicionaNumeroHead(result,node(soma));
         
         if(numero1!=NULL) numero1=numero1->prev;
         if(numero2!=NULL) numero2=numero2->prev;
       }
+      num1->sign=sinal1;
+      num2->sign=sinal2;
       return result;
   
       
@@ -182,44 +212,123 @@ BigNumber somar(BigNumber num1, BigNumber num2, char sign){
         if(numero1!=NULL) numero1=numero1->prev;
         if(numero2!=NULL) numero2=numero2->prev;
       }
+      num1->sign=sinal1;
+      num2->sign=sinal2;
       return result;
     }else{
       
       adicionaNumeroTail(result, node(0));
+      num1->sign=sinal1;
+      num2->sign=sinal2;
       return result;
     }
   }
+  num1->sign=sinal1;
+  num2->sign=sinal2;
   return 0;
 }
 
-BigNumber multiplicar(BigNumber num1, BigNumber num2){
-  return NULL;
-  
-  
-}
+BigNumber multiplicar(BigNumber num1, BigNumber num2) {
 
-void removerZeros(BigNumber num1){
-  Node no = num1->head;
-  while(no != NULL && no->data == 0 && no->next != NULL){
-    Node aux = no;
-    no = no->next;
-    no->prev = NULL;
-    free(aux);
-    num1->qtd-=1;
-    num1->head=no;
+  if (((num1->head == num1->tail) && num1->head->data == 0) || 
+      ((num2->head == num2->tail) && num2->head->data == 0)) {
+    BigNumber result = bigNumber();
+    adicionaNumeroTail(result, node(0));
+    return result;
   }
 
+  char sinal = (num1->sign == num2->sign) ? '+' : '-';
+  num1->sign = num2->sign = '+';
+
+  BigNumber result = bigNumber();
+  adicionaNumeroTail(result, node(0));
+
+  Node n2 = num2->tail;
+  int shift = 0;
+
+  while (n2 != NULL) {
+    BigNumber temp = bigNumber();
+    for (int i = 0; i < shift; i++) {
+      adicionaNumeroTail(temp, node(0));
+    }
+
+    int aux = 0;
+    Node n1 = num1->tail;
+
+    while (n1 != NULL) {
+      int product = n1->data * n2->data + aux;
+      aux = product / 10;
+      adicionaNumeroHead(temp, node(product % 10));
+      //printBigNum(temp);
+      n1 = n1->prev;
+    }
+
+    if (aux > 0) {
+      adicionaNumeroHead(temp, node(aux));
+    }
+
+    BigNumber newResult = somar(result, temp, '+');
+    liberaMemoria(result);
+    liberaMemoria(temp);
+    result = newResult;
+
+    n2 = n2->prev;
+    shift++;
+  }
+
+  removerZeros(result);
+  result->sign = sinal;
+  return result;
 }
 
-void liberaMemoria(BigNumber lista){
-  Node atual = lista->head;
-  while(atual!=NULL){
-    Node aux = atual;
-    atual = atual->next;
-    free(aux);
-  }
-  free(lista);
+BigNumber dividir(BigNumber num1, BigNumber num2) {
+    if (num2->qtd == 1 && num2->head->data == 0) {
+      BigNumber result = bigNumber();
+      adicionaNumeroTail(result, node(0));
+      return result;
+    }
+
+    BigNumber quociente = bigNumber();
+    BigNumber resto = bigNumber();
+    Node atual = num1->head;
+
+    quociente->sign = (num1->sign == num2->sign) ? '+' : '-';
+
+    num1->sign='+';
+    num2->sign='+';
+
+    BigNumber aux;
+
+    while (atual) {
+        
+        adicionaNumeroTail(resto, node(atual->data));
+        removerZeros(resto);
+
+        int contador = 0;
+        while (maiorBigNum(resto, num2)<2) {
+            aux = resto;
+            resto = somar(resto, num2, '-'); 
+            removerZeros(resto);
+            contador++;
+
+            liberaMemoria(aux);
+            //printf("teste");
+        }
+
+        adicionaNumeroTail(quociente, node(contador));
+        atual = atual->next;
+    }
+
+    removerZeros(quociente);
+    if(quociente->qtd==1 && quociente->head->data==0){
+      quociente->sign='+';
+    }
+    liberaMemoria(resto);
+    return quociente;
 }
+
+
+
 
 BigNumber lerNumero(){
 
@@ -279,10 +388,14 @@ void lerEquacao(){
         printBigNum(result);
         break;
       case '/':
-        //result = somar(num1,num2);
+        result = dividir(num1,num2);
+        removerZeros(result);
+        printBigNum(result);
         break;
       case '*':
-        //result = somar(num1,num2);
+        result = multiplicar(num1,num2);
+        removerZeros(result);
+        printBigNum(result);
         break;
     }
     
