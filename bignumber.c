@@ -1,31 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
 
-
-typedef struct node* Node;
-typedef struct bigNumber* BigNumber;
-
-struct node {
-  Node prev;
-  int data;
-  Node next;
-};
-
-struct bigNumber {
-  Node head;
-  Node tail;
-  int qtd;
-  char sign;
-};
-
-Node node(int data){
-  Node n = malloc(sizeof(struct node));
-  n->data = data;
-  n->next = NULL;
-  n->prev = NULL;
-  return n;
-}
+#include "bignumber.h"
 
 BigNumber bigNumber(){
   BigNumber novoBig = malloc(sizeof(struct bigNumber));
@@ -62,18 +38,6 @@ void adicionaNumeroHead(BigNumber lista, Node n){
     lista->qtd+=1;
   }
   
-  
-}
-
-int printCadeiaNo(Node no){
-  if (no->next!=NULL){
-    printf("%d", no->data);
-    printCadeiaNo(no->next);
-  }else{
-    printf("%d", no->data);
-    return 0;
-  }
-  return 0;
 }
 
 void printBigNum(BigNumber lista){
@@ -119,6 +83,19 @@ void removerZeros(BigNumber num1){
 
 }
 
+BigNumber copiaBigNumber(BigNumber num1){
+  BigNumber copia = bigNumber();
+  Node no = num1->head;
+
+  while(no){
+    adicionaNumeroTail(copia, node(no->data));
+    no=no->next;
+  }
+
+  copia->sign = num1->sign;
+  return copia;
+}
+
 void liberaMemoria(BigNumber lista){
   Node atual = lista->head;
   while(atual!=NULL){
@@ -162,6 +139,7 @@ BigNumber somar(BigNumber num1, BigNumber num2, char sign){
     }
     num1->sign=sinal1;
     num2->sign=sinal2;
+    removerZeros(result);
     return result;
   
   }else{
@@ -180,7 +158,6 @@ BigNumber somar(BigNumber num1, BigNumber num2, char sign){
           //printf("%d",soma);
         }
         
-        
         adicionaNumeroHead(result,node(soma));
         
         if(numero1!=NULL) numero1=numero1->prev;
@@ -188,9 +165,10 @@ BigNumber somar(BigNumber num1, BigNumber num2, char sign){
       }
       num1->sign=sinal1;
       num2->sign=sinal2;
+
+      removerZeros(result);
       return result;
   
-      
     }else if (maior ==2){
       result->sign = num2->sign;
       while(numero1!=NULL || numero2!=NULL||aux!=0){
@@ -205,8 +183,6 @@ BigNumber somar(BigNumber num1, BigNumber num2, char sign){
           //printf("%d",soma);
         }
         
-        
-        
         adicionaNumeroHead(result,node(soma));
         
         if(numero1!=NULL) numero1=numero1->prev;
@@ -214,12 +190,16 @@ BigNumber somar(BigNumber num1, BigNumber num2, char sign){
       }
       num1->sign=sinal1;
       num2->sign=sinal2;
+
+      removerZeros(result);
       return result;
     }else{
       
       adicionaNumeroTail(result, node(0));
       num1->sign=sinal1;
       num2->sign=sinal2;
+
+      removerZeros(result);
       return result;
     }
   }
@@ -234,6 +214,8 @@ BigNumber multiplicar(BigNumber num1, BigNumber num2) {
       ((num2->head == num2->tail) && num2->head->data == 0)) {
     BigNumber result = bigNumber();
     adicionaNumeroTail(result, node(0));
+
+    removerZeros(result);
     return result;
   }
 
@@ -278,13 +260,25 @@ BigNumber multiplicar(BigNumber num1, BigNumber num2) {
 
   removerZeros(result);
   result->sign = sinal;
+
+  removerZeros(result);
   return result;
 }
 
-BigNumber dividir(BigNumber num1, BigNumber num2) {
-    if (num2->qtd == 1 && num2->head->data == 0) {
+BigNumber dividir(BigNumber num1, BigNumber num2, int saida) {
+    if (num2->qtd == 1 && num2->head->data == 0 && saida==1) {
       BigNumber result = bigNumber();
       adicionaNumeroTail(result, node(0));
+
+      removerZeros(result);
+      return result;
+    }
+
+    if (num2->qtd == 1 && num2->head->data == 0 && saida==1) {
+      BigNumber result = bigNumber();
+      adicionaNumeroTail(result, node(0));
+
+      removerZeros(result);
       return result;
     }
 
@@ -323,12 +317,22 @@ BigNumber dividir(BigNumber num1, BigNumber num2) {
     if(quociente->qtd==1 && quociente->head->data==0){
       quociente->sign='+';
     }
-    liberaMemoria(resto);
-    return quociente;
+    if(saida==1){
+
+      liberaMemoria(resto);
+
+      removerZeros(quociente);
+      return quociente;
+
+    }else{
+
+      liberaMemoria(quociente);
+
+      removerZeros(resto);
+      return resto;
+    }
+    
 }
-
-
-
 
 BigNumber lerNumero(){
 
@@ -341,7 +345,6 @@ BigNumber lerNumero(){
     return NULL;
   }
   
-    
     if (caracter1=='-' || caracter1=='+'){
       num1->sign =caracter1;
       caracter1 = getchar();
@@ -351,69 +354,9 @@ BigNumber lerNumero(){
       caracter1 = getchar();
       
     }
+
     return num1;
 }
 
-void lerEquacao(){
-  
-  char caracter1='0';
-  
-  while(1){
-    
-    BigNumber num1 = lerNumero();
-    if(num1==NULL){
-      break;
-    }
-    BigNumber num2 = lerNumero();
-    //printBigNum(num1);
-    //printBigNum(num2);
-
-    BigNumber result;
-    
-    
-    
-    caracter1 = getchar();
-    getchar();
-
-    
-    switch(caracter1){
-      case '+':
-        result = somar(num1,num2,'+');
-        removerZeros(result);
-        printBigNum(result);
-        break;
-      case '-':
-        result = somar(num1,num2,'-');
-        removerZeros(result);
-        printBigNum(result);
-        break;
-      case '/':
-        result = dividir(num1,num2);
-        removerZeros(result);
-        printBigNum(result);
-        break;
-      case '*':
-        result = multiplicar(num1,num2);
-        removerZeros(result);
-        printBigNum(result);
-        break;
-    }
-    
-    liberaMemoria(num1);
-    liberaMemoria(num2);
-    liberaMemoria(result);
-    
-    
-    
-   
-    
-  }
-}
-
-int main(){
-  
-  lerEquacao();
-  return 0;
-}
 
 
