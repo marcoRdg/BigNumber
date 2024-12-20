@@ -43,6 +43,10 @@ void lerEquacao(){
         result = dividir(num1,num2,0);
         printBigNum(result);
         break;
+      case '^':
+        result = exponencial(num1,num2);
+        printBigNum(result);
+        break;
     }
     
     liberaMemoria(num1);

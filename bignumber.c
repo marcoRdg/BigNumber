@@ -4,6 +4,7 @@
 #include "bignumber.h"
 
 BigNumber bigNumber(){
+  
   BigNumber novoBig = malloc(sizeof(struct bigNumber));
   novoBig->sign = '+';
   novoBig->head = NULL;
@@ -14,10 +15,12 @@ BigNumber bigNumber(){
 
 void adicionaNumeroTail(BigNumber lista, Node n){
   if(lista->head==NULL){
+
     lista->head = n;
     lista->tail = n;
     lista->qtd+=1;
   }else{
+
     n->prev = lista->tail;
     lista->tail->next = n;
     lista->tail = n;
@@ -27,11 +30,14 @@ void adicionaNumeroTail(BigNumber lista, Node n){
 }
 
 void adicionaNumeroHead(BigNumber lista, Node n){
+
   if(lista->head==NULL){
+
     lista->head=n;
     lista->tail =n;
     lista->qtd+=1;
   }else{
+
     n->next = lista->head;
     lista->head->prev = n;
     lista->head = n;
@@ -41,13 +47,14 @@ void adicionaNumeroHead(BigNumber lista, Node n){
 }
 
 void printBigNum(BigNumber lista){
-  //printf("Num Digitos:%d\n", lista->qtd);
-  lista->sign=='-'?printf("%c", lista->sign):0;
+
+  lista->sign == '-' ? printf("%c", lista->sign):0;
   printCadeiaNo(lista->head);
   printf("\n");
 }
 
 int maiorBigNum(BigNumber num1, BigNumber num2){
+
   if (num1->qtd>num2->qtd){
    return 1;
     
@@ -57,22 +64,28 @@ int maiorBigNum(BigNumber num1, BigNumber num2){
     Node a = num1->head;
     Node b = num2->head;
     do{
+
       if((a->data>b->data) || (a != NULL && b == NULL)){
+
         return 1;
       }else if((a->data<b->data) || (b !=NULL && a == NULL)){
+
         return 2;
       }
+
       a=a->next;
       b=b->next;
-    //}while(a->prev!=NULL || b->prev!=NULL);
+
     }while(a!=NULL || b!=NULL);
     return 0;
   }
 }
 
 void removerZeros(BigNumber num1){
+
   Node no = num1->head;
   while(no != NULL && no->data == 0 && no->next != NULL){
+
     Node aux = no;
     no = no->next;
     no->prev = NULL;
@@ -84,6 +97,7 @@ void removerZeros(BigNumber num1){
 }
 
 BigNumber copiaBigNumber(BigNumber num1){
+
   BigNumber copia = bigNumber();
   Node no = num1->head;
 
@@ -97,12 +111,15 @@ BigNumber copiaBigNumber(BigNumber num1){
 }
 
 void liberaMemoria(BigNumber lista){
+
   Node atual = lista->head;
   while(atual!=NULL){
+
     Node aux = atual;
     atual = atual->next;
     free(aux);
   }
+
   free(lista);
 }
 
@@ -120,6 +137,7 @@ BigNumber somar(BigNumber num1, BigNumber num2, char sign){
   num2->sign = (sign==num2->sign) ? '+':'-';
   
   if(num1->sign==num2->sign){
+
     result->sign = num1->sign;
     while(numero1!=NULL || numero2!=NULL||aux!=0){
     
@@ -131,31 +149,37 @@ BigNumber somar(BigNumber num1, BigNumber num2, char sign){
       
       soma = soma%10;
       
-      
       adicionaNumeroHead(result,node(soma));
       
       if(numero1!=NULL) numero1=numero1->prev;
       if(numero2!=NULL) numero2=numero2->prev;
     }
+
     num1->sign=sinal1;
     num2->sign=sinal2;
+
     removerZeros(result);
     return result;
   
   }else{
     int maior = maiorBigNum(num1,num2);
+    
     if (maior==1){
+
       result->sign = num1->sign;
       while(numero1!=NULL || numero2!=NULL||aux!=0){
+
         int soma=0;
         int valor1 = (numero1 != NULL) ? numero1->data:0;
         int valor2 = (numero2 != NULL) ? numero2->data:0;
+        
         if(valor1>=valor2){
+
           soma = valor1-valor2;
         }else{
+
           numero1->prev->data = numero1->prev->data-1;
           soma = (valor1+10)-valor2;
-          //printf("%d",soma);
         }
         
         adicionaNumeroHead(result,node(soma));
@@ -170,17 +194,21 @@ BigNumber somar(BigNumber num1, BigNumber num2, char sign){
       return result;
   
     }else if (maior ==2){
+
       result->sign = num2->sign;
       while(numero1!=NULL || numero2!=NULL||aux!=0){
+
         int soma=0;
         int valor1 = (numero1 != NULL) ? numero1->data:0;
         int valor2 = (numero2 != NULL) ? numero2->data:0;
+        
         if(valor2>=valor1){
+
           soma = valor2-valor1;
         }else{
+
           numero2->prev->data = numero2->prev->data-1;
           soma = (valor2+10)-valor1;
-          //printf("%d",soma);
         }
         
         adicionaNumeroHead(result,node(soma));
@@ -203,8 +231,10 @@ BigNumber somar(BigNumber num1, BigNumber num2, char sign){
       return result;
     }
   }
+
   num1->sign=sinal1;
   num2->sign=sinal2;
+
   return 0;
 }
 
@@ -215,7 +245,6 @@ BigNumber multiplicar(BigNumber num1, BigNumber num2) {
     BigNumber result = bigNumber();
     adicionaNumeroTail(result, node(0));
 
-    removerZeros(result);
     return result;
   }
 
@@ -229,7 +258,9 @@ BigNumber multiplicar(BigNumber num1, BigNumber num2) {
   int shift = 0;
 
   while (n2 != NULL) {
+
     BigNumber temp = bigNumber();
+
     for (int i = 0; i < shift; i++) {
       adicionaNumeroTail(temp, node(0));
     }
@@ -238,10 +269,11 @@ BigNumber multiplicar(BigNumber num1, BigNumber num2) {
     Node n1 = num1->tail;
 
     while (n1 != NULL) {
+
       int product = n1->data * n2->data + aux;
       aux = product / 10;
       adicionaNumeroHead(temp, node(product % 10));
-      //printBigNum(temp);
+
       n1 = n1->prev;
     }
 
@@ -266,24 +298,17 @@ BigNumber multiplicar(BigNumber num1, BigNumber num2) {
 }
 
 BigNumber dividir(BigNumber num1, BigNumber num2, int saida) {
-    if (num2->qtd == 1 && num2->head->data == 0 && saida==1) {
+
+    if (num2->qtd == 1 && num2->head->data == 0) {
       BigNumber result = bigNumber();
       adicionaNumeroTail(result, node(0));
 
-      removerZeros(result);
-      return result;
-    }
-
-    if (num2->qtd == 1 && num2->head->data == 0 && saida==1) {
-      BigNumber result = bigNumber();
-      adicionaNumeroTail(result, node(0));
-
-      removerZeros(result);
       return result;
     }
 
     BigNumber quociente = bigNumber();
     BigNumber resto = bigNumber();
+
     Node atual = num1->head;
 
     quociente->sign = (num1->sign == num2->sign) ? '+' : '-';
@@ -332,6 +357,65 @@ BigNumber dividir(BigNumber num1, BigNumber num2, int saida) {
       return resto;
     }
     
+}
+
+int verificaIgualdade(BigNumber num1, BigNumber num2){
+
+  if (num1->qtd==num2->qtd){
+    Node no1 = num1->head;
+    Node no2 = num2->head;
+    while(no1!=NULL){
+      if(no1->data!=no2->data){
+        return 0;
+      }
+      no1=no1->next;
+      no2=no2->next;
+    }
+    return 1;
+
+  }else{
+
+    return 0;
+  }
+
+}
+
+int parImpar(BigNumber num) {
+    Node tail = num->tail; 
+    return (tail->data % 2 == 0) ? 1 : 0; 
+}
+
+BigNumber exponencial(BigNumber num1, BigNumber num2) {
+    if (num2->qtd == 1 && num2->head->data == 0) { 
+        BigNumber result = bigNumber();
+        adicionaNumeroTail(result, node(1));
+        return result;
+    }
+
+    removerZeros(num2); 
+
+    BigNumber dois = bigNumber();
+    adicionaNumeroTail(dois, node(2));
+
+    BigNumber aux = dividir(num2, dois, 1); 
+    removerZeros(aux);
+
+    BigNumber result = exponencial(num1, aux);
+    liberaMemoria(aux);
+
+    BigNumber result_final;
+
+    if (parImpar(num2) == 1) { 
+        result_final = multiplicar(result, result);
+    } else { 
+        BigNumber result_aux = multiplicar(result, result);
+        result_final = multiplicar(result_aux, num1);
+        liberaMemoria(result_aux);
+    }
+
+    liberaMemoria(result);
+    liberaMemoria(dois);
+    return result_final;
 }
 
 BigNumber lerNumero(){
