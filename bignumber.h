@@ -17,17 +17,13 @@ BigNumber lerNumero();
 
 void adicionaNumeroTail(BigNumber lista, Node n);
 void adicionaNumeroHead(BigNumber lista, Node n);
-
 void printBigNum(BigNumber lista);
 
 int maiorBigNum(BigNumber num1, BigNumber num2);
-
 int parImpar(BigNumber num);
-
 int verificaIgualdade(BigNumber num1, BigNumber num2);
 
 BigNumber copiaBigNumber(BigNumber num1);
-
 void liberaMemoria(BigNumber lista);
 
 BigNumber somar(BigNumber num1, BigNumber num2, char sign);
