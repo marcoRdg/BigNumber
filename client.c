@@ -47,6 +47,10 @@ void lerEquacao(){
         result = exponencial(num1,num2);
         printBigNum(result);
         break;
+      case 'x':
+      result = karatsuba(num1,num2);
+      printBigNum(result);
+      break;
     }
     
     liberaMemoria(num1);

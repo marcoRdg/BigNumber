@@ -418,6 +418,109 @@ BigNumber exponencial(BigNumber num1, BigNumber num2) {
     return result_final;
 }
 
+BigNumber karatsubaRecursivo(BigNumber num1, BigNumber num2){
+  int qtdDig = num1->qtd;
+  printf("%d\n", qtdDig);
+
+  if (qtdDig<=3){
+    return multiplicar(num1,num2);
+  }
+
+  BigNumber p = bigNumber();
+  BigNumber q = bigNumber();
+  BigNumber r = bigNumber();
+  BigNumber s = bigNumber();
+
+  Node n1 = num1->head;
+  Node n2 = num2->head;
+
+  for (int i = 0; i < qtdDig; ++i)
+  {
+    if(i<qtdDig/2){
+      adicionaNumeroTail(p,node(n1->data));
+      adicionaNumeroTail(r,node(n2->data));
+    }else{
+      adicionaNumeroTail(q,node(n1->data));
+      adicionaNumeroTail(s,node(n2->data));
+    }
+    n1 = n1->next;
+    n2 = n2->next;
+  }
+  removerZeros(p);
+  removerZeros(q);
+  removerZeros(r);
+  removerZeros(s);
+
+  printBigNum(p);
+  printBigNum(q);
+  printBigNum(r);
+  printBigNum(s);
+
+  BigNumber somaPQ = somar(p,q,'+');
+  BigNumber somaRS = somar(r,s,'+');
+
+  BigNumber pr = karatsubaRecursivo(p,r);
+  printBigNum(pr);
+  BigNumber qs = karatsubaRecursivo(q,s);
+  printBigNum(qs);
+  BigNumber y = karatsubaRecursivo(somaPQ,somaRS);
+  printBigNum(y);
+
+  BigNumber sub = somar(y,pr,'-');
+  /*free(y)*/
+  y= somar(sub, qs, '-');
+ 
+  for (int i = 0; i < qtdDig; ++i)
+  {
+    adicionaNumeroTail(pr,node(0));
+  }
+  printBigNum(pr);
+
+  for (int i = 0; i < qtdDig/2; ++i)
+  {
+    adicionaNumeroTail(y,node(0));
+  }
+  printBigNum(y);
+
+  BigNumber result = somar(pr,y,'+');
+  result = somar(result,qs,'+');
+
+
+
+  return result;
+}
+
+BigNumber karatsuba (BigNumber num1, BigNumber num2){
+  BigNumber aux;
+  int zeros;
+
+  if (num1->qtd != num2->qtd){
+    if (num1->qtd>num2->qtd){
+      if(num1->qtd%2!=0){
+        adicionaNumeroHead(num1,node(0));
+      }
+      zeros=num1->qtd-num2->qtd;
+      aux = num2;
+    }else{
+      if(num2->qtd%2!=0){
+        adicionaNumeroHead(num2,node(0));
+      }
+      zeros=num2->qtd-num1->qtd;
+      aux = num1;
+    } 
+  }
+
+  for (int i = 0; i <zeros; ++i)
+  {
+    adicionaNumeroHead(aux,node(0));
+  }
+  printBigNum(num1);
+  printBigNum(num2);
+  
+
+  return karatsubaRecursivo(num1, num2);
+}
+
 BigNumber lerNumero(){
 
   BigNumber num1 = bigNumber();
