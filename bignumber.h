@@ -30,6 +30,7 @@ BigNumber somar(BigNumber num1, BigNumber num2, char sign);
 BigNumber multiplicar(BigNumber num1, BigNumber num2);
 BigNumber dividir(BigNumber num1, BigNumber num2, int saida);
 BigNumber exponencial (BigNumber num1, BigNumber num2);
+BigNumber karatsuba (BigNumber num1, BigNumber num2);
 
 #endif
 
