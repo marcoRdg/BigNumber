@@ -14,8 +14,6 @@ void lerEquacao(){
       break;
     }
     BigNumber num2 = lerNumero();
-    //printBigNum(num1);
-    //printBigNum(num2);
 
     BigNumber result;
     
