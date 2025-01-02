@@ -78,19 +78,21 @@ BigNumber dividir(BigNumber num1, BigNumber num2, int saida);
 ### Exemplos de funcionalidades:
 
 - <b>Resto</b> : Algoritmo de Divisão calcula quociente e resto, retorno pela passagem de parãmetro (1- quociente, 2- resto);
-- <b>Exponenciação Rápida</b> : Efetua exponenciação pelo método recursivo de exponenciação rápida.
+- <b>Exponenciação Rápida</b> : Efetua exponenciação pelo método recursivo de exponenciação rápida;
+- <b>Karatsuba</b> : Efetua multiplicação pelo método recursivo Karatsuba.
 
 ```c
 BigNumber dividir(BigNumber num1, BigNumber num2, int saida);
 BigNumber exponencial (BigNumber num1, BigNumber num2);
+BigNumber karatsuba (BigNumber num1, BigNumber num2);
 ```
 
 ### Interface Client
 
-Interface de manipulação do usuario para resolução de operações de forma continua (implementada em client.c). Faz a leitura de dois numeros e efetua uma operação perante o próximo caracter:
+Interface de manipulação do usuario para resolução de operações de forma continua (implementada em client.c). Faz a leitura de dois numeros e efetua uma operação perante o próximo caracter; pela análise de desempenho dos algoritmos foi escolhido permanecer com o algoritmo de multiplicação usual ao método Karatsuba (devido os diversos objetos criados para manipulação do BigNumber durante a execução do Karatsuba, o programa não obteve melhor desempenho comparado a função multipliação implementada):
 
 ```c
-    switch(caracter1){
+        switch(caracter1){
       case '+':
         result = somar(num1,num2,'+');
         printBigNum(result);
@@ -115,5 +117,9 @@ Interface de manipulação do usuario para resolução de operações de forma c
         result = exponencial(num1,num2);
         printBigNum(result);
         break;
+      case 'x':
+      result = karatsuba(num1,num2);
+      printBigNum(result);
+      break;
     }
 ```

@@ -242,6 +242,7 @@ BigNumber multiplicar(BigNumber num1, BigNumber num2) {
 
   if (((num1->head == num1->tail) && num1->head->data == 0) || 
       ((num2->head == num2->tail) && num2->head->data == 0)) {
+    
     BigNumber result = bigNumber();
     adicionaNumeroTail(result, node(0));
 
@@ -278,6 +279,7 @@ BigNumber multiplicar(BigNumber num1, BigNumber num2) {
     }
 
     if (aux > 0) {
+
       adicionaNumeroHead(temp, node(aux));
     }
 
@@ -300,6 +302,7 @@ BigNumber multiplicar(BigNumber num1, BigNumber num2) {
 BigNumber dividir(BigNumber num1, BigNumber num2, int saida) {
 
     if (num2->qtd == 1 && num2->head->data == 0) {
+
       BigNumber result = bigNumber();
       adicionaNumeroTail(result, node(0));
 
@@ -325,13 +328,13 @@ BigNumber dividir(BigNumber num1, BigNumber num2, int saida) {
 
         int contador = 0;
         while (maiorBigNum(resto, num2)<2) {
+
             aux = resto;
             resto = somar(resto, num2, '-'); 
             removerZeros(resto);
             contador++;
 
             liberaMemoria(aux);
-            //printf("teste");
         }
 
         adicionaNumeroTail(quociente, node(contador));
@@ -362,6 +365,7 @@ BigNumber dividir(BigNumber num1, BigNumber num2, int saida) {
 int verificaIgualdade(BigNumber num1, BigNumber num2){
 
   if (num1->qtd==num2->qtd){
+
     Node no1 = num1->head;
     Node no2 = num2->head;
     while(no1!=NULL){
@@ -381,12 +385,14 @@ int verificaIgualdade(BigNumber num1, BigNumber num2){
 }
 
 int parImpar(BigNumber num) {
+
     Node tail = num->tail; 
     return (tail->data % 2 == 0) ? 1 : 0; 
 }
 
 BigNumber exponencial(BigNumber num1, BigNumber num2) {
     if (num2->qtd == 1 && num2->head->data == 0) { 
+
         BigNumber result = bigNumber();
         adicionaNumeroTail(result, node(1));
         return result;
@@ -406,8 +412,10 @@ BigNumber exponencial(BigNumber num1, BigNumber num2) {
     BigNumber result_final;
 
     if (parImpar(num2) == 1) { 
+
         result_final = multiplicar(result, result);
     } else { 
+
         BigNumber result_aux = multiplicar(result, result);
         result_final = multiplicar(result_aux, num1);
         liberaMemoria(result_aux);
@@ -420,7 +428,6 @@ BigNumber exponencial(BigNumber num1, BigNumber num2) {
 
 BigNumber karatsubaRecursivo(BigNumber num1, BigNumber num2){
   int qtdDig = num1->qtd;
-  /*printf("%d\n", qtdDig);*/
 
   char sinal = (num1->sign == num2->sign) ? '+' : '-';
 
@@ -439,12 +446,15 @@ BigNumber karatsubaRecursivo(BigNumber num1, BigNumber num2){
   for (int i = 0; i < qtdDig; ++i)
   {
     if(i<qtdDig/2){
+
       adicionaNumeroTail(p,node(n1->data));
       adicionaNumeroTail(r,node(n2->data));
     }else{
+
       adicionaNumeroTail(q,node(n1->data));
       adicionaNumeroTail(s,node(n2->data));
     }
+
     n1 = n1->next;
     n2 = n2->next;
   }
@@ -453,18 +463,11 @@ BigNumber karatsubaRecursivo(BigNumber num1, BigNumber num2){
   removerZeros(r);
   removerZeros(s);
 
-  /*printBigNum(p);
-  printBigNum(q);
-  printBigNum(r);
-  printBigNum(s);*/
-
   BigNumber somaPQ = somar(p,q,'+');
   BigNumber somaRS = somar(r,s,'+');
 
   BigNumber pr = karatsuba(p,r);
-  /*printBigNum(pr);*/
   BigNumber qs = karatsuba(q,s);
-  /*printBigNum(qs);*/
 
   liberaMemoria(p);
   liberaMemoria(q);
@@ -472,7 +475,6 @@ BigNumber karatsubaRecursivo(BigNumber num1, BigNumber num2){
   liberaMemoria(s);
 
   BigNumber y = karatsuba(somaPQ,somaRS);
-  /*printBigNum(y);*/
 
   liberaMemoria(somaPQ);
   liberaMemoria(somaRS);
@@ -488,13 +490,11 @@ BigNumber karatsubaRecursivo(BigNumber num1, BigNumber num2){
   {
     adicionaNumeroTail(pr,node(0));
   }
-  /*printBigNum(pr);*/
 
   for (int i = 0; i < qtdDig/2; ++i)
   {
     adicionaNumeroTail(y,node(0));
   }
-  /*printBigNum(y);*/
 
   BigNumber result = somar(pr,y,'+');
   BigNumber aux = result;
@@ -506,8 +506,6 @@ BigNumber karatsubaRecursivo(BigNumber num1, BigNumber num2){
   liberaMemoria(aux);
 
   result->sign = sinal;
-
-
 
   return result;
 }
@@ -541,9 +539,6 @@ BigNumber karatsuba (BigNumber num1, BigNumber num2){
   {
     adicionaNumeroHead(aux,node(0));
   }
-  /*printBigNum(num1);*/
-  /*printBigNum(num2);*/
-  
 
   return karatsubaRecursivo(num1, num2);
 }
