@@ -92,34 +92,41 @@ BigNumber karatsuba (BigNumber num1, BigNumber num2);
 Interface de manipulação do usuario para resolução de operações de forma continua (implementada em client.c). Faz a leitura de dois numeros e efetua uma operação perante o próximo caracter; pela análise de desempenho dos algoritmos foi escolhido permanecer com o algoritmo de multiplicação usual ao método Karatsuba (devido os diversos objetos criados para manipulação do BigNumber durante a execução do Karatsuba, o programa não obteve melhor desempenho comparado a função multipliação implementada):
 
 ```c
-        switch(caracter1){
+switch(caracter1){
+
       case '+':
         result = somar(num1,num2,'+');
         printBigNum(result);
         break;
+
       case '-':
         result = somar(num1,num2,'-');
         printBigNum(result);
         break;
+
       case '/':
         result = dividir(num1,num2,1);
         printBigNum(result);
         break;
+
       case '*':
         result = multiplicar(num1,num2);
         printBigNum(result);
         break;
+
       case '%':
         result = dividir(num1,num2,0);
         printBigNum(result);
         break;
+
       case '^':
         result = exponencial(num1,num2);
         printBigNum(result);
         break;
+
       case 'x':
-      result = karatsuba(num1,num2);
-      printBigNum(result);
-      break;
-    }
+        result = karatsuba(num1,num2);
+        printBigNum(result);
+        break;
+}
 ```
