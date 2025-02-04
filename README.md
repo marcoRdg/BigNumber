@@ -11,7 +11,7 @@ Projeto em C para execução de operações matemáticas padrões com numeros gr
 
 ## Motivação
 
-Pensando na limitação numérica das linguagens de programação a motivação para o projeto é desenvolver uma interface de manipulação de números grandes, e aqui se entende por núemros grandes, números não suportados pelos tipos númericos padrões (Int Big Int).
+Pensando na limitação numérica das linguagens de programação a motivação para o projeto é desenvolver uma interface de manipulação de números grandes, e aqui se entende por números grandes, números não suportados pelos tipos númericos padrões (Int - Big Int).
 Desenvolver um algoritmo de manipulação de números em que a única limitação seja a memoria disponível no computador.
 
 
